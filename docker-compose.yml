@@ -1,0 +1,34 @@
+services:
+  sish:
+    image: antoniomika/sish:latest
+    container_name: sish
+    volumes:
+      - ./letsencrypt:/etc/letsencrypt
+      - ./pubkeys:/pubkeys
+      - ./keys:/keys
+      - ./ssl:/ssl
+    command: |
+      --ssh-address=:2222
+      --http-address=:80
+      --https-address=:443
+      --https=true
+      --https-certificate-directory=/ssl
+      --authentication=true
+      --authentication-password=${SISH_AUTH_PASSWORD}
+      --authentication-keys-directory=/pubkeys
+      --private-keys-directory=/keys
+      --bind-random-ports=false
+      --bind-random-subdomains=false
+      --bind-random-aliases=false
+      --domain=${SISH_DOMAIN}
+      --tcp-aliases=true
+      --service-console=true
+      --log-to-client=true
+      --admin-console=true
+      --verify-ssl=false
+      --https-ondemand-certificate=false
+      --https-ondemand-certificate-accept-terms=false
+      --idle-connection=false
+      --ping-client-timeout=2m
+    network_mode: host
+    restart: unless-stopped
